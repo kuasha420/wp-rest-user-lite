@@ -1,6 +1,8 @@
 # WP REST User Lite
 
-WP REST User adds in the 'User Registration' or 'Retrieve Password' function for REST API.
+[![Star IT Ltd](https://staritltd.com/wp-content/uploads/2019/10/Web_Logo_of_Star_IT_158x80.png)](https://staritltd.com)
+
+WP REST User Lite adds in the 'User Registration' or 'Retrieve Password' function for WP REST API, without all the bloats.
 
 ## Description
 
@@ -12,7 +14,7 @@ This plugin fullfills such requirement by extending the existing WordPress REST 
 
 ## Usage
 
-== Register a User ==
+### Register a User
 
 To Register a User using REST API, send a `POST` request to `/wp-json/wp/v2/users/register`, with a **JSON body** (Set header: content-type: application/json):
 `
@@ -43,7 +45,7 @@ To perform further actions after user is registered, write and add_action:
 add_action('wp_rest_user_user_register', 'user_registered'); function user_registered($user) { // Do Something }
 ```
 
-== Reset Password ==
+### Reset Password
 
 To Retrieve Password using REST API, send a `POST` request to ``/wp-json/wp/v2/users/lost-password`, including a **JSON body** (Set header: content-type: application/json):
 
@@ -66,26 +68,26 @@ If successful, you should receive the following response
 
 ## Frequently Asked Questions
 
-- Why do I need WP REST User? =
+- Why do I need WP REST User?
 
 If you're planning on using your WordPress website as a Backend, and you're consuming RESTful api, you'll most probably need to Register User via REST API. This is precisely what this plugin does.
 
-- Is it secure? =
+- Is it secure?
 
 Great question! For the time being, this plugin only allows registering user as 'subscriber' or 'contributor' role. 'Subscriber' role has very limited capability in terms what WordPress allows him/her to do. From our perspective, subscribers are quite harmless.
 
-- Does it work with WooCommerce? =
+- Does it work with WooCommerce?
 
 Another great question! By default, WordPress registers new user as 'subscriber', while WooCommerce registers new user as 'customer'.
 If you have WooCommerce installed and activated on your WordPress website, this plugin will automatically register user as 'customer' as well.
 
-- There's a bug, what do I do? =
+- There's a bug, what do I do?
 
 File a Github Issue
 
 ## Changelog
 
-= 1.0.0 =
+### 1.0.0
 
 1. Based on WP Rest User 1.4.3
 2. Removed Fremius and other useless stuffs.
@@ -93,7 +95,7 @@ File a Github Issue
 
 ## Upgrade Notice
 
-If you are currently using WP Rest User
+If you are currently using WP Rest User, you must uninstall it first before using WPRest User Lite.
 
 ## Contribute
 
