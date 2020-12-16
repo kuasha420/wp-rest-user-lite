@@ -51,7 +51,6 @@ class Wp_Rest_User_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -95,11 +94,36 @@ class Wp_Rest_User_Public {
 		$password = sanitize_text_field($parameters['password']);
 		$first_name = sanitize_text_field($parameters['firstname']);
 		$last_name = sanitize_text_field($parameters['lastname']);
+		$phone_number = sanitize_text_field($parameters['phone']);
 		$role = sanitize_text_field($parameters['role']);
 		$error = new WP_Error();
 
 		if (empty($username)) {
 			$error->add(400, __("Username field 'username' is required.", 'wp-rest-user'), array('status' => 400));
+			return $error;
+		}
+
+		if (empty($phone_number)) {
+			$error->add(400, __("Phone field 'phone' is required.", 'wp-rest-user'), array('status' => 400));
+			return $error;
+		}
+
+		if (substr($phone_number, 0, 1) !== '+') {
+			$error->add(400, __("Phone number must start with country code. ie. +880", 'wp-rest-user'), array('status' => 400));
+			return $error;
+		}
+
+		$args = array(
+			'meta_key'     => 'user_phone',
+			'meta_value'   => $phone_number,
+			'meta_compare' => '=',
+		);
+		$user_query = new WP_User_Query($args);
+		// Get the results
+		$authors = $user_query->get_results();
+		// Check for results
+		if (!empty($authors)) {
+			$error->add(400, __("Phone number already exists, please enter another phone number.", 'wp-rest-user'), array('status' => 400));
 			return $error;
 		}
 
@@ -156,15 +180,19 @@ class Wp_Rest_User_Public {
 			];
 
 			$user_id = wp_insert_user($new_user);
-			
+
 			if (!is_wp_error($user_id)) {
 				// Ger User Meta Data (Sensitive, Password included. DO NOT pass to front end.)
 				$user = get_user_by('id', $user_id);
+
+				// Add Meta field with phone number 
+				add_user_meta($user_id, 'user_phone', $phone_number);
+
 				do_action('wp_rest_user_user_register', $user);
 
 				// Ger User Data (Non-Sensitive, Pass to front end.)
-                $response['code'] = 200;
-                $response['id'] = $user_id;
+				$response['code'] = 200;
+				$response['id'] = $user_id;
 				$response['message'] = __("User '" . $username . "' Registration was Successful", "wp-rest-user");
 			} else {
 				return $user_id;
@@ -246,5 +274,4 @@ class Wp_Rest_User_Public {
 
 		return new WP_REST_Response($response, 200);
 	}
-
 }
